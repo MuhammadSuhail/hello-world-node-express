@@ -1,0 +1,96 @@
+ {
+  "apiVersion": "v1",
+  "kind": "Template",
+  "labels": {
+    "template": "NodeJsBuilderImage"
+  },
+  "message": "This is a builder image used for Creating Node Js Applications",
+  "metadata": {
+    "annotations": {
+      "openshift.io/display-name": "Builder Image",
+      "description": "",
+      "iconClass": "icon-jenkins",
+      "tags": "instant-app,jenkins"
+    },
+    "name": "NodeJsBuilderImage"
+  },
+  "parameters": [
+    {
+      "description": "The name assigned to all of the frontend objects defined in this template.",
+      "displayName": "Name",
+      "name": "NAME",
+      "required": true,
+      "value": "nodejs"
+    },
+    {
+      "description": "The URL of the repository with your application source code.",
+      "displayName": "Git Repository URL",
+      "name": "SOURCE_REPOSITORY_URL",
+      "required": true,
+      "value": "https://github.com/MuhammadSuhail/centos7-s2i-nodejs.git"
+    },
+	{
+      "description": "Set this to a branch name, tag or other ref of your repository if you are not using the default branch.",
+      "displayName": "Git Reference",
+      "name": "SOURCE_REPOSITORY_REF"
+    },
+    {
+      "description": "Set this to the relative path to your project if it is not in the root of your repository.",
+      "displayName": "Context Directory",
+      "name": "CONTEXT_DIR"
+    }
+  ],
+  "objects": [
+{
+      "apiVersion": "v1",
+      "kind": "BuildConfig",
+      "metadata": {
+        "annotations": {
+          "description": "Defines how to build the application"
+        },
+        "name": "${NAME}"
+      },
+      "spec": {
+        "output": {
+          "to": {
+            "kind": "ImageStreamTag",
+            "name": "${NAME}:4"
+          }
+        },
+        "source": {
+          "contextDir": "${CONTEXT_DIR}",
+          "git": {
+            "ref": "${SOURCE_REPOSITORY_REF}",
+            "uri": "${SOURCE_REPOSITORY_URL}"
+          },
+          "type": "Git"
+        },
+        "strategy": {
+          "dockerStrategy":{
+            "env":[
+              {
+                "name" :"NODE_VERSION",
+                "value":"8.2.0"
+              },
+{
+                "name" :"NPM_VERSION",
+                "value":"5.3.0"
+              }
+              ]
+            
+          }
+        }
+      }
+    },
+    {
+      "apiVersion": "v1",
+      "kind": "ImageStream",
+      "metadata": {
+        "annotations": {
+          "description": "Keeps track of changes in the application image"
+        },
+        "name": "${NAME}"
+      }
+    }
+  ]
+}

@@ -1,0 +1,4 @@
+Openshift develops all the images from scratch. Whatever it takes as input either Source code or Docker image it recreates image from it again before deploying.
+Common Source Input is Git Repository. If it contains Docker File it takes it as it is else you can add Docker file in later Configuration of the template as will be explained.
+If the source is Input code, you can specify the strategy to s2i whcih takes an openshift image()with Docker file as input and moves all the source code files in it and then builds it to an openshift image.
+You can also choose strategy as Docker in which it takes docker file as input or 'from' image name.
